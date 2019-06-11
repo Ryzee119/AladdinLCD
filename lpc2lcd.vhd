@@ -14,7 +14,7 @@
 -- If this isn't good enough for your particular LCD, use an external trimmer.
 
 
--- Ref 1. Intel® Low Pin Count (LPC) Interface Specification Rev 1.1 (Auguest 2002)
+-- Ref 1. IntelÂ® Low Pin Count (LPC) Interface Specification Rev 1.1 (August 2002)
 -- Ref 2. SmartXX LT OPX Software Developer Documentation
 -- Other references that I used:
  -- Xblast OS Source code for confirmation of SmartXX commands https://bitbucket.org/psyko_chewbacca/lpcmod_os/src/master/
@@ -74,6 +74,7 @@ architecture LPC2LCD_arch of LPC2LCD is
 	--Keep track of LPC clocks in the state machine
 	signal LPC_CURRENT_STATE: LPC_STATE_MACHINE ;
 	
+	-- Holds the 2 byte address
 	signal LPC_ADDRESS: STD_LOGIC_VECTOR (15 downto 0 ) := "0000000000000000";
 
 	--0,D6,D7,D4,D5,E,RS,0 from MSB to LSB, See Ref 2 Table 1.
@@ -84,7 +85,8 @@ architecture LPC2LCD_arch of LPC2LCD is
 
 	-- Counter used for the PWM output
   signal PWM_COUNT_CONTRAST: STD_LOGIC_VECTOR(3 downto 0) := "0000";
-
+	
+	-- Counter used to track LPC address clocking
   signal LPC_COUNT_ADDRESS: STD_LOGIC_VECTOR (1 downto 0 ) := "00";
 
 
@@ -100,8 +102,11 @@ begin
 	LCD_DATA(2) <= LCD_DATA_BYTE(6);
 	LCD_DATA(3) <= LCD_DATA_BYTE(5);
 
-	
-	LPC_LAD <= "0000" when LPC_CURRENT_STATE = SYNC else "ZZZZ";
+	--On SYNC output "0000" to indicate no errors. else high impedance input
+	LPC_LAD <= "0000" when LPC_CURRENT_STATE = SYNC else "ZZZZ"; --
+		
+	--Really rough PWM output for the contrast count. Outputs 1 or 0 as a ratio of the contrast value
+	--set by the dashboard.
 	LCD_CONTRAST <= '0' when (PWM_COUNT_CONTRAST < LCD_CONTRAST_NIBBLE) else '1'; --PWM output
 
 	-- Create a process which is evaluated with changes on LPC_CLK and LPC_RST pins
@@ -136,10 +141,10 @@ begin
 						LPC_CURRENT_STATE <= WAIT_START; -- Unsupported, reset state machine.
 					end if;
 				
-				-- Address is 2 Bytes long, this is 4 LPC clocks
+				-- Address is 2 bytes long, this is 4 LPC clocks
 				-- It is driven out with the most significant nibble first
 				-- See Ref 1, Section 4.2.1.5
-				-- Due to space contrainst, I wait until the 4th clock and
+				-- Due to space constraints, I wait until the 4th clock and
 				-- grab the lowest nibble only. Again, a bit hacky but seems to work.
 				when ADDRESS =>
 					LPC_COUNT_ADDRESS<=LPC_COUNT_ADDRESS+1;
@@ -158,11 +163,11 @@ begin
 						when  "00" => -- LCD Data
 							LCD_DATA_BYTE(3 downto 0) <= LPC_LAD;
 						when "11" => -- Contrast Value
-							if(LPC_ADDRESS(3)='0') then
+							if(LPC_ADDRESS(3)='0') then --Quick check of bit3 too to double check its the right command
 								LCD_CONTRAST_NIBBLE(3 downto 0) <= LPC_LAD;
 							end if;
 						when others =>
-						
+								
 					end case;
 					LPC_CURRENT_STATE <= DATA2;
 				
@@ -186,7 +191,7 @@ begin
 				when TAR1_2 =>
 					LPC_CURRENT_STATE <= SYNC;
 
-				when SYNC =>				
+				when SYNC =>
 					LPC_CURRENT_STATE <= WAIT_START;			
 					
 			end case;
