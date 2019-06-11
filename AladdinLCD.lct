@@ -1,0 +1,147 @@
+
+[Device]
+Family = lc4k;
+PartNumber = LC4032V-75T44I;
+Package = 44TQFP;
+PartType = LC4032V;
+Speed = -7.5;
+Operating_condition = IND;
+Status = Production;
+EN_PinGLB = yes;
+EN_PinMacrocell = yes;
+
+[Revision]
+Parent = lc4k32v.lci;
+DATE = 06/11/2019;
+TIME = 20:08:07;
+Source_Format = Pure_VHDL;
+Synthesis = Synplify;
+
+[Ignore Assignments]
+
+[Clear Assignments]
+
+[Backannotate Assignments]
+
+[Global Constraints]
+Logic_optimization_effort = 4;
+Clock_enable_optimization = Keep_all;
+
+[Location Assignments]
+layer = OFF;
+LPC_CLK = Pin, 39, -, -, -;
+LPC_RST = Pin, 2, -, A, 5;
+LCD_DATA_0_ = Pin, 26, -, B, 7;
+LCD_DATA_1_ = Pin, 41, -, A, 1;
+LCD_DATA_2_ = Pin, 42, -, A, 2;
+LCD_DATA_3_ = Pin, 43, -, A, 3;
+LCD_E = Pin, 31, -, B, 10;
+LCD_RS = Pin, 29, -, B, 8;
+LPC_LAD_0_ = Pin, 38, -, B, 15;
+LPC_LAD_1_ = Pin, 37, -, B, 14;
+LPC_LAD_2_ = Pin, 36, -, B, 13;
+LPC_LAD_3_ = Pin, 35, -, B, 12;
+LCD_CONTRAST = Pin, 9, -, A, 10;
+
+[Group Assignments]
+layer = OFF;
+
+[Resource Reservations]
+layer = OFF;
+
+[Fitter Report Format]
+
+[Power]
+
+[Source Constraint Option]
+
+[Fast Bypass]
+
+[OSM Bypass]
+
+[Input Registers]
+NONE = LPC_LAD_0_;
+
+[Netlist/Delay Format]
+NetList = VHDL;
+
+[IO Types]
+layer = OFF;
+
+[Pullup]
+
+[Slewrate]
+
+[Region]
+
+[Timing Constraints]
+layer = OFF;
+
+[HSI Attributes]
+
+[Input Delay]
+
+[opt global constraints list]
+
+[Explorer User Settings]
+
+[Pin attributes list]
+
+[global constraints list]
+
+[Global Constraints Process Update]
+
+[pin lock limitation]
+
+[LOCATION ASSIGNMENTS LIST]
+
+[RESOURCE RESERVATIONS LIST]
+
+[individual constraints list]
+
+[Attributes list setting]
+
+[Timing Analyzer]
+
+[PLL Assignments]
+
+[Dual Function Macrocell]
+
+[Explorer Results]
+
+[VHDL synplify constraints]
+
+[VHDL spectrum constraints]
+
+[verilog synplify constraints]
+
+[verilog spectrum constraints]
+
+[VHDL synplify constraints list]
+
+[VHDL spectrum constraints list]
+
+[verilog synplify constraints list]
+
+[verilog spectrum constraints list]
+
+[ORP Bypass]
+
+[Register Powerup]
+RESET = LCD_DATA_0_, LCD_DATA_1_, LCD_DATA_2_, LCD_DATA_3_, LCD_E, LCD_RS, LCD_CONTRAST;
+NONE = LPC_LAD_0_, LPC_LAD_1_, LPC_LAD_2_, LPC_LAD_3_;
+
+[Constraint Version]
+version = 1.0;
+
+[ORP ASSIGNMENTS]
+layer = OFF;
+
+[Node attribute]
+layer = OFF;
+
+[SYMBOL/MODULE attribute]
+layer = OFF;
+
+[Nodal Constraints]
+layer = OFF;
