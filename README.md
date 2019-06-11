@@ -12,6 +12,8 @@ For the dashboard settings: **0%=No Contrast, 25%=Full Constrast**. Anything els
 If this isn't good enough for your particular LCD, use an external trimmer.
 ![lcd installed](https://i.imgur.com/CkHGifg.jpg)
 
+Ideally, a custom little PCB could be used in conjunction with the same or similar CPLD to make installation much easier without having to sacrifice an Aladdin modchip. A future project maybe.
+
 ## Instructions
 1. Remove the flash memory and socket from the Aladdin Chip to expose the required usable IO pads. Be careful not too damage the pads.
 2. Connect JTAG programmer to the JTAG pins shown below. Apply 3.3V power to the Aladdin PCB. 
@@ -22,7 +24,7 @@ If this isn't good enough for your particular LCD, use an external trimmer.
     **svf ALADDINLCD.SVF progress** *To program the CPLD.*  
     ![programming output](https://i.imgur.com/hocVP1j.png)
 4. Wire the LCD as per the diagram below.
-5. Install onto LPC Header in your Xbox. There is no other connections to worry about. *If you have a 1.6 motherboard you will need to rebuild the LPC as you would for a modchip install.*
+5. Install onto the LPC header in your Xbox. There is no other connections to worry about. *If you have a 1.6 motherboard you will need to rebuild the LPC as you would for a modchip install.*
 6. Enable `SmartXX` LCD in your dashboard.
 7. Set contrast to a value between `0 and 25%` to display correctly. 25% is full contrast with this mod. Values above 25% won't work as expected. I find ~20% a good value.
 
