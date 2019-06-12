@@ -16,8 +16,8 @@ Ideally, a custom little PCB could be used in conjunction with the same or simil
 
 ## Instructions
 1. Connect JTAG programmer to the JTAG pins shown below.
-2. Apply external 3.3V power to the Aladdin PCB so that it is powered whilst programming. This can be done by plugging it into the LPC port on the Xbox or an exteral power supply.
-3. Program CPLD with the `SVF` file in this repository . I programmed it with [UrJTAG](http://urjtag.org/) using a [compatible programming cable](http://urjtag.org/book/_system_requirements.html#_supported_jtag_adapters_cables). The general programming sequence in UrJTAG is something like: (Commands written in **bold**).
+2. Apply external 3.3V power to the Aladdin PCB so that it is powered whilst programming. This can be done by plugging it into the LPC port on the Xbox or an external power supply.
+3. Program CPLD with the `SVF` file in this repository . I programmed it with [UrJTAG](http://urjtag.org/) using a [compatible programming cable](http://urjtag.org/book/_system_requirements.html#_supported_jtag_adapters_cables). The general programming sequence in UrJTAG is something like: (Commands written in **bold**).  
     **cable usbblaster**  *Type `help cable` for other cables.*  
     **detect**  *To confirm that the cpld is detected.*  
     **svf ALADDINLCD.SVF progress** *To program the CPLD.*  
