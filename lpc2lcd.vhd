@@ -17,7 +17,7 @@
 -- Ref 1. Intel® Low Pin Count (LPC) Interface Specification Rev 1.1 (August 2002)
 -- Ref 2. SmartXX LT OPX Software Developer Documentation
 -- Other references that I used:
- -- Xblast OS Source code for confirmation of SmartXX commands https://bitbucket.org/psyko_chewbacca/lpcmod_os/src/master/
+--    Xblast OS Source code for confirmation of SmartXX commands https://bitbucket.org/psyko_chewbacca/lpcmod_os/src/master/
 
 
 -- This program is free software: you can redistribute it and/or modify  
@@ -42,9 +42,9 @@ entity LPC2LCD is
 port(
 	--HD44780 LCD Pins
 	LCD_DATA: out std_logic_vector ( 3 downto 0 );
-	LCD_RS: out std_logic ;
-	LCD_E: out std_logic ;
-	LCD_CONTRAST: out std_logic ;
+	LCD_RS: out std_logic;
+	LCD_E: out std_logic;
+	LCD_CONTRAST: out std_logic;
 
 	--LPC Pins
 	LPC_RST: in std_logic;
@@ -61,7 +61,7 @@ architecture LPC2LCD_arch of LPC2LCD is
 	type LPC_STATE_MACHINE is (
 		WAIT_START,
 		CYCTYPE_DIR,
-		ADDRESS,
+		ADDRESS, -- Ideally this is broken into 4 steps to capture full address
 		DATA1,
 		DATA2,
 		TAR1_1,
@@ -84,10 +84,10 @@ architecture LPC2LCD_arch of LPC2LCD is
 	signal LCD_CONTRAST_NIBBLE: STD_LOGIC_VECTOR ( 3 downto 0 ) := "1100"; --Ok default contrast value 
 
 	-- Counter used for the PWM output
-  signal PWM_COUNT_CONTRAST: STD_LOGIC_VECTOR(3 downto 0) := "0000";
+  	signal PWM_COUNT_CONTRAST: STD_LOGIC_VECTOR(3 downto 0) := "0000";
 	
 	-- Counter used to track LPC address clocking
-  signal LPC_COUNT_ADDRESS: STD_LOGIC_VECTOR (1 downto 0 ) := "00";
+ 	signal LPC_COUNT_ADDRESS: STD_LOGIC_VECTOR (1 downto 0 ) := "00";
 
 
 
@@ -103,7 +103,7 @@ begin
 	LCD_DATA(3) <= LCD_DATA_BYTE(5);
 
 	--On SYNC output "0000" to indicate no errors. else high impedance input
-	LPC_LAD <= "0000" when LPC_CURRENT_STATE = SYNC else "ZZZZ"; --
+	LPC_LAD <= "0000" when LPC_CURRENT_STATE = SYNC else "ZZZZ";
 		
 	--Really rough PWM output for the contrast count. Outputs 1 or 0 as a ratio of the contrast value
 	--set by the dashboard.
@@ -117,8 +117,7 @@ begin
 		if (LPC_RST = '0') then
 			LPC_CURRENT_STATE <= WAIT_START;
 			LCD_DATA_BYTE	 <= "00000000";
-		  LPC_ADDRESS <= "0000000000000000";
-			--PWM_COUNT_CONTRAST <= "0000";
+		  	LPC_ADDRESS <= "0000000000000000";
 			LCD_CONTRAST_NIBBLE <= "1100";
 
 		elsif (LPC_CLK'EVENT and LPC_CLK='1') then
@@ -177,8 +176,9 @@ begin
 						when  "00" => -- LCD Data
 							LCD_DATA_BYTE(7 downto 4) <= LPC_LAD;
 						--when "11" => -- Contrast Value
-						--CPLD is so small, cant even manage full byte of contrast for PWM. limit it to 1 nibble. good enough.
-					  --The upper nibble would normally be here
+							--CPLD is so small, cant even manage full byte of contrast
+							--for PWM. limit it to 1 nibble. good enough.
+					  		--The upper nibble would normally be here
 						when others =>
 						
 					end case;
@@ -192,10 +192,12 @@ begin
 					LPC_CURRENT_STATE <= SYNC;
 
 				when SYNC =>
+					--LAD lines are set to "0000" here to indicate a successful transaction
+					--This is done by this behaviour defined earlier:
+					--LPC_LAD <= "0000" when LPC_CURRENT_STATE = SYNC else "ZZZZ";
 					LPC_CURRENT_STATE <= WAIT_START;			
 					
 			end case;
-
 		end if;
 	end process;
 
